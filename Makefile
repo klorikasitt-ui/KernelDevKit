@@ -1,31 +1,40 @@
 # Değişkenler
 PYTHON = python3
-PIP = pip
+PIP = pip3
 APP_NAME = KernelDevKitIDE.py
-# Termux'un standart komut dizini
-BIN_DIR = /data/data/com.termux/files/usr/bin
-# Çalıştırılacak komut adı
+# Standart Linux sistemlerinde kullanıcı komutları buraya konur
+INSTALL_DIR = /usr/local/bin
 BIN_NAME = kdk
 
 # Renkler
 CYAN = \033[0;36m
 GREEN = \033[0;32m
+RED = \033[0;31m
 RESET = \033[0m
 
-.PHONY: install uninstall
+.PHONY: help install uninstall run
+
+help:
+	@echo "$(CYAN)KernelDevKitIDE - Linux Kurulum Menüsü:$(RESET)"
+	@echo "  sudo make install   - IDE'yi sistem genelinde (kdk) kurar"
+	@echo "  sudo make uninstall - Sistemden kaldırır"
+	@echo "  make run            - Kurulum yapmadan yerel olarak çalıştırır"
 
 install:
-	@echo "$(CYAN)📦 Kurulum Başlıyor$(RESET)"
-	@# 1. Bağımlılıkları kontrol et
-	@$(PIP) install textual --quiet
-	@# 2. Çalıştırılabilir dosyayı oluştur (Shebang + Kod)
-	@echo "#!$(BIN_DIR)/python3" > $(BIN_NAME)
+	@echo "$(CYAN)📦 Kurulum Başlatılıyor...$(RESET)"
+	@# Bağımlılıkların kurulu olduğundan emin ol
+	@$(PIP) install textual --quiet || echo "$(RED)Hata: pip3 veya textual yüklenemedi!$(RESET)"
+	@# Çalıştırılabilir script oluşturma
+	@echo "#!/usr/bin/env $(PYTHON)" > $(BIN_NAME)
 	@cat $(APP_NAME) >> $(BIN_NAME)
-	@# 3. Yetkileri ayarla ve sisteme taşı
+	@# İzinleri ayarla ve taşı (sudo yetkisi gerekebilir)
 	@chmod +x $(BIN_NAME)
-	@mv $(BIN_NAME) $(BIN_DIR)/
-	@echo "$(GREEN)✅ Başarıyla kuruldu! Artık her yerden 'kdk' yazabilirsin.$(RESET)"
+	@sudo mv $(BIN_NAME) $(INSTALL_DIR)/
+	@echo "$(GREEN)✅ Başarıyla kuruldu! Terminale 'kdk' yazarak başlatabilirsiniz.$(RESET)"
 
 uninstall:
-	@rm -f $(BIN_DIR)/$(BIN_NAME)
-	@echo "$(GREEN)🗑️ Sistemden temizlendi.$(RESET)"
+	@sudo rm -f $(INSTALL_DIR)/$(BIN_NAME)
+	@echo "$(GREEN)🗑️ Sistemden başarıyla kaldırıldı.$(RESET)"
+
+run:
+	$(PYTHON) $(APP_NAME)
