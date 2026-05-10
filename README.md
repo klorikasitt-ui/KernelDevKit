@@ -6,7 +6,7 @@ KernelDevKit, Android/Termux ekosistemi için özel olarak tasarlanmış, ultra 
 Termux üzerinde saniyeler içinde kurulum yapabilirsiniz:
 ### 1. Depoyu Klonlayın
 ```bash
-git clone https://github.com/klorikasitt-ui/KernelDevKit.git
+git clone https://github.com/klorikasitt-ui/KernelDevKit/tree/For-termux.git
 cd KernelDevKit
 
 ```
